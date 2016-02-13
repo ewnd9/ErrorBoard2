@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
-var db = require('./database');
-var aggregators = require('../common/aggregators');
+var db = require('./../database');
+var aggregators = require('../../common/aggregators');
 
 module.exports = function(req, res) {
     var type = req.params.type;

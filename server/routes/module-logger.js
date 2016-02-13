@@ -2,8 +2,8 @@ var express = require('express');
 var useragent = require('useragent');
 var moment = require('moment');
 
-var db = require('./database');
-var ws = require('./websockets');
+var db = require('./../database');
+var ws = require('./../websockets');
 var app = express();
 
 app.use(function(req, res) {

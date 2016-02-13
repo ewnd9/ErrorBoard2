@@ -1,5 +1,5 @@
 var React = require('react');
-var App = require('../client/component-app.jsx');
+var App = require('../../client/component-app.jsx');
 var app = React.createFactory(App);
 
 module.exports = function(req, res) {

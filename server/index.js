@@ -6,8 +6,6 @@ var favicon = require('serve-favicon');
 var compression = require('compression');
 
 var ws = require('./websockets');
-var serveStaticFile = require('./middleware-static-file');
-var redirectTo = require('./redirect-to');
 
 var app = express();
 var server = http.createServer(app);
@@ -19,15 +17,14 @@ app.set('views', __dirname);
 
 app.use(favicon(path.join(publicPath, 'favicon.ico')));
 app.use(compression());
+
 app.use('/static', express.static(publicPath));
-app.get('/reports/:type', require('./route-reports'));
-app.get('/error', require('./module-logger'));
 
-// TODO: Remove.
-app.get('/fake', serveStaticFile(path.join(publicPath, 'fake.html')));
+app.get('/reports/:type', require('./routes/route-reports'));
+app.get('/error', require('./routes/module-logger'));
+app.get('/:type/:id?', require('./routes/route-index'));
 
-app.get('/:type/:id?', require('./route-index'));
-app.get('/', redirectTo('/messages/'));
+app.get('/', (req, res) => res.redirect('/messages/'));
 
 ws.installHandlers(server, {prefix: '/ws'});
 
