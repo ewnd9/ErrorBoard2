@@ -10,16 +10,21 @@ var publicPath = config.publicPath;
 var fs = require('fs');
 var htmlPath = publicPath + '/index.html';
 var html = fs.readFileSync(htmlPath, 'utf-8');
+var createDb = require('./database');
+var createAgent = require('./node-agent/node-agent');
 
-module.exports = function(baseUrl = '') {
+module.exports = function(dbFile, baseUrl = '') {
   var app = express();
   var ws = require('./websockets');
+
+  var db = createDb(dbFile);
+  var agent = createAgent(db);
 
   app.use(favicon(path.join(publicPath, 'favicon.ico')));
   app.use(compression());
 
-  app.get('/reports/:type', require('./routes/route-reports'));
-  app.get('/error', require('./routes/module-logger'));
+  app.get('/reports/:type', require('./routes/route-reports')(db));
+  app.get('/error', require('./routes/module-logger')(agent));
 
   app.get('/', (req, res) => res.redirect('messages/'));
   app.use('/', express.static(publicPath));
@@ -55,5 +60,5 @@ module.exports = function(baseUrl = '') {
       });
   }
 
-  return { app: app, ws: ws };
-}
+  return { app, ws, agent };
+};

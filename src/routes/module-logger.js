@@ -2,56 +2,39 @@ var express = require('express');
 var useragent = require('useragent');
 var moment = require('moment');
 
-var db = require('./../database');
-var ws = require('./../websockets');
-var app = express();
+module.exports = function(agent) {
+  var app = express();
+  var ws = require('./../websockets');
 
-app.use(function(req, res) {
-    var query = req.query;
+  app.use(function(req, res, next) {
+      var query = req.query;
 
-    if (!query.message || !query.url) {
-        return res.end(400);
-    }
+      if (!query.message || !query.url) {
+          return res.end(400);
+      }
 
-    var ua = useragent.parse(req.headers['user-agent']).toJSON();
-    var referer = req.headers.referer;
-    var timestamp = Date.now();
-    var date = moment(timestamp).format('DD-MM-YYYY');
+      var ua = useragent.parse(req.headers['user-agent']).toJSON();
+      var referer = req.headers.referer;
 
-    var meta = query.meta;
+      var meta = query.meta;
 
-    try {
-        meta = JSON.parse(meta);
-    } catch(e) {
-        // Unable to parse JSON metadata, treating it as a string.
-    }
+      try {
+          meta = JSON.parse(meta);
+      } catch(e) {
+          // Unable to parse JSON metadata, treating it as a string.
+      }
 
-    var doc = {
-        ua: ua,
-        referer: referer,
-        timestamp: timestamp,
-        date: date,
+      agent
+          .reportFromRequest(err, ua, referer, meta)
+          .then(dock => {
+            try {
+                ws.broadcast(JSON.stringify(doc));
+            } catch(e) {}
 
-        message: query.message,
-        url: query.url,
-        line: query.line,
-        column: query.column,
-        stack: query.stack,
+            res.end();
+          })
+          .catch(err => next(err));
+  });
 
-        meta: meta
-    };
-
-    db.insert(doc, function(err) {
-        if (err) {
-            return res.end(500);
-        }
-
-        try {
-            ws.broadcast(JSON.stringify(doc));
-        } catch(e) {}
-
-        res.end();
-    });
-});
-
-module.exports = app;
+  return app;
+};

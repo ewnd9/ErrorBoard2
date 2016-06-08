@@ -1,15 +1,15 @@
 var path = require('path');
 var NeDB = require('nedb');
 
-var config = require('./config');
-
-var db = new NeDB({
-    filename: path.join(__dirname, '..', config.dbfile),
+module.exports = function(filename) {
+  var db = new NeDB({
+    filename,
     autoload: true
-});
+  });
 
-db.ensureIndex({
+  db.ensureIndex({
     fieldName: 'timestamp'
-});
+  });
 
-module.exports = db;
+  return db;
+};
