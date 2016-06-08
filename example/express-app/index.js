@@ -1,28 +1,27 @@
-# embedded-error-board
+'use strict';
 
-> Track and fix JavaScript errors fired by your visitor's browsers.
+require('source-map-support').install();
 
-WIP fork of https://github.com/Lapple/ErrorBoard
-
-## Install
-
-```sh
-$ npm install embedded-error-board --save
-```
-
-## Usage
-
-- [`express-example/index.js`](example/express-app/index.js)
-
-```js
+const http = require('http');
 const express = require('express');
-
 const app = express();
+const port = 8000;
+
+app.get('/', (req, res) => {
+  res.end(`
+    <div><a href="/error-board/">Error Board</a></div>
+    <div><a href="/throw-error-test/">Throw an Error</a></div>
+  `);
+});
+
+app.get('/throw-error-test', (req, res) => {
+  throw new Error('/throw-error-test');
+});
 
 const mount = '/error-board';
-const dbFile = __dirname + '/errors.db';
+const dbFile = __dirname + '/db';
 
-const errorBoard = require('embedded-error-board')(dbFile, mount);
+const errorBoard = require('../../dist/backend')(dbFile, mount);
 app.use(mount, errorBoard.app);
 
 const server = http.createServer(app);
@@ -41,15 +40,3 @@ app.use(function(err, req, res, next) { // always last
 
 server.listen(port);
 console.log('Listening on port %s', port);
-```
-
-
-## Development
-
-```sh
-$ npm run start:dev
-```
-
-## License
-
-MIT © [ewnd9](http://ewnd9.com)
