@@ -1,6 +1,6 @@
 {
   "name": "embedded-error-board",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Track and fix JavaScript errors fired by your visitor's browsers",
   "main": "dist/backend",
   "author": [
