@@ -6,6 +6,7 @@ var aggregators = require('../common/aggregators');
 module.exports = function(req, res) {
     var type = req.params.type;
     var aggregator = aggregators[type];
+    console.log(aggregators, type);
 
     if (aggregator) {
         db.find({}, function(err, docs) {

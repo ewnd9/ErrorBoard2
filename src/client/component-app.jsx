@@ -1,6 +1,8 @@
 var page = require('page');
 var React = require('react');
 
+var api = require('./api');
+
 var Nav = require('./component-nav.jsx');
 var Dashboard = require('./component-dashboard.jsx');
 var Report = require('./component-report.jsx');
@@ -54,10 +56,11 @@ module.exports = React.createClass({
         }
     },
     _showDetails: function(data) {
-        var url = '/' + this.props.params.type + '/' + encodeURIComponent(data.key) + '/';
+        var url = api.getBaseUrl() + '/' + this.props.params.type + '/' + encodeURIComponent(encodeURIComponent(data.key));
+        // double `encodeURIComponent` workaround https://github.com/visionmedia/page.js/issues/187
         page.show(url, {details: data.title});
     },
     _hideDetails: function() {
-        page.show('/' + this.props.params.type + '/');
+        page.show(api.getBaseUrl() + '/' + this.props.params.type + '/');
     }
 });

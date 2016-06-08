@@ -1,6 +1,8 @@
 var React = require('react/addons');
 var cx = React.addons.classSet;
 
+var api = require('./api');
+
 module.exports = React.createClass({
     render: function() {
         var icons = {
@@ -22,7 +24,9 @@ module.exports = React.createClass({
             { this.link('/meta/', 'Metadata', icons.metadata) }
         </div>;
     },
-    link: function(pathname, title, icon) {
+    link: function(absolutePathname, title, icon) {
+        var pathname = api.getBaseUrl() + absolutePathname;
+        
         var classes = cx({
             'nav__link': true,
             'nav__link_active': this.props.pathname.indexOf(pathname) === 0

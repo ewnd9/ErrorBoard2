@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var vow = require('vow');
-var request = require('superagent');
+var api = require('./api');
 var aggregators = require('../common/aggregators');
 
 var _reports = {};
@@ -41,11 +41,8 @@ module.exports = {
         if (_reports[type][key]) {
             deferred.resolve(_reports[type][key]);
         } else {
-            request
-                .get('/reports/' + type)
-                .query(key)
-                .set('Accept', 'application/json')
-                .end(function(res) {
+            api
+                .fetchReports(type, key, function(res) {
                     if (res.ok) {
                         deferred.resolve(_reports[type][key] = res.body);
                     } else {

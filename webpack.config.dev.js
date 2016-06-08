@@ -9,7 +9,7 @@ config.entry = [
 ];
 
 config.output.path = __dirname + '/public';
-config.output.publicPath = '/';
+config.output.publicPath = '';
 
 config.plugins = config.plugins.reduce((total, curr) => {
   if (curr instanceof HtmlWebpackPlugin) {
