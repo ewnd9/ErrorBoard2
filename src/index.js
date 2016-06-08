@@ -10,7 +10,7 @@ var ws = require('./websockets');
 var app = express();
 var server = http.createServer(app);
 
-var publicPath = path.join(__dirname, '..', 'client/public');
+var publicPath = path.join(__dirname, '..', 'public');
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname);
