@@ -1,4 +1,4 @@
-# ErrorBoard2
+# embedded-error-board
 
 > Track and fix JavaScript errors fired by your visitor's browsers.
 
@@ -6,8 +6,8 @@ WIP fork of https://github.com/Lapple/ErrorBoard
 
 ## Install
 
-```
-$ git clone https://github.com/ewnd9/ErrorBoard2.git && cd ErrorBoard2
+```sh
+$ git clone https://github.com/ewnd9/embedded-error-board.git && cd embedded-error-board
 $ npm install
 ```
 
@@ -26,15 +26,15 @@ Edit the `config` section of `package.json`:
 
 Start server by
 
-```
+```sh
 $ npm start
 ```
 
-## Roadmap
+## Development
 
-- [ ] Tests
-- [ ] Browserify -> webpack
-- [ ] Integrate [raven-js](https://github.com/getsentry/raven-js) 
+```sh
+$ npm run start:dev
+```
 
 ## License
 

@@ -29,3 +29,8 @@ app.get('/', (req, res) => res.redirect('/messages/'));
 ws.installHandlers(server, {prefix: '/ws'});
 
 module.exports = server;
+
+var config = require('../package.json').config;
+
+server.listen(config.port);
+console.log('Listening on port %s', config.port);
