@@ -7,7 +7,7 @@ const nodeExternals = require('webpack-node-externals');
 const config = require(__dirname + '/webpack.config.prod');
 
 config.target = 'node';
-config.entry = __dirname + '/src/cli.js';
+config.entry = __dirname + '/src/index.js';
 config.node = {
   console: false,
   global: false,

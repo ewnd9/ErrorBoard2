@@ -1,3 +1,4 @@
 db
-client/public/app.js
 node_modules
+public/*
+dist/*

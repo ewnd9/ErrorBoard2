@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 config.entry = [
   'webpack-hot-middleware/client?reload=true',
-  __dirname + '/src/app/index.js'
+  __dirname + '/src/client/app.js'
 ];
 
 config.output.path = __dirname + '/public';
@@ -14,9 +14,9 @@ config.output.publicPath = '/';
 config.plugins = config.plugins.reduce((total, curr) => {
   if (curr instanceof HtmlWebpackPlugin) {
     total.push(new HtmlWebpackPlugin({
-      template: __dirname + '/src/app/index.html',
+      template: __dirname + '/src/client/assets/index.html',
       inject: 'body',
-      favicon: __dirname + '/src/app/favicon.ico'
+      favicon: __dirname + '/src/client/assets/favicon.ico'
     }));
   } else {
     total.push(curr);

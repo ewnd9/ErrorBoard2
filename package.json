@@ -2,7 +2,7 @@
   "name": "ErrorBoard",
   "version": "2.0.0",
   "description": "Track and fix JavaScript errors fired by your visitor's browsers",
-  "main": "eb.js",
+  "main": "dist/backend",
   "author": {
     "name": "Aziz Yuldoshev",
     "email": "yuldoshev.aziz@gmail.com",
@@ -17,11 +17,12 @@
     "port": 3000
   },
   "scripts": {
-    "build": "npm run clean && npm run build:backend && npm run build:frontend",
+    "build": "npm run clean && npm run copy-assets && npm run build:backend && npm run build:frontend",
     "build:backend": "NODE_ENV=production webpack --config webpack.config.backend.js",
     "build:frontend": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "clean": "rm -rf dist && rm -rf public",
-    "start": "node app",
+    "copy-assets": "mkdir public && cp src/client/assets/* public/",
+    "start": "node dist/backend",
     "start:dev": "babel-watch --exclude src/client src"
   },
   "dependencies": {
@@ -54,6 +55,8 @@
     "reactify": "^1.0.0",
     "source-map-support": "^0.4.0",
     "watchify": "^2.3.0",
+    "webpack-hot-middleware": "^2.10.0",
+    "webpack-node-externals": "^1.2.0",
     "webpackman": "^0.5.0"
   }
 }

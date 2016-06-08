@@ -10,27 +10,58 @@ var ws = require('./websockets');
 var app = express();
 var server = http.createServer(app);
 
-var publicPath = path.join(__dirname, '..', 'public');
+var config = require('./config');
 
-app.set('view engine', 'ejs');
-app.set('views', __dirname);
+var port = config.port;
+var publicPath = config.publicPath;
+
+var fs = require('fs');
+var htmlPath = publicPath + '/index.html';
+var html = fs.readFileSync(htmlPath, 'utf-8');
 
 app.use(favicon(path.join(publicPath, 'favicon.ico')));
 app.use(compression());
 
-app.use('/static', express.static(publicPath));
-
 app.get('/reports/:type', require('./routes/route-reports'));
 app.get('/error', require('./routes/module-logger'));
-app.get('/:type/:id?', require('./routes/route-index'));
 
 app.get('/', (req, res) => res.redirect('/messages/'));
+app.use('/', express.static(publicPath));
+
+if (process.env.NODE_ENV === 'production') {
+    var reactRoute = require('./routes/route-index')(html);
+
+    app.get('/', reactRoute);
+    app.use(compression());
+    app.use(express.static(publicPath));
+    app.get('*', reactRoute);
+
+    app.get('/:type/:id?', reactRoute);
+} else {
+    var webpack = require('webpack');
+    var webpackMiddleware = require('webpack-dev-middleware');
+    var webpackHotMiddleware = require('webpack-hot-middleware');
+
+    var wconfig = require('../webpack.config.dev');
+    var compiler = webpack(wconfig);
+    var middleware = webpackMiddleware(compiler, {
+      ...wconfig.devServer,
+      contentBase: __dirname
+    });
+
+    app.use(middleware);
+    app.use(webpackHotMiddleware(compiler));
+
+    app.get('*', function response(req, res) {
+      middleware.fileSystem
+        .createReadStream(htmlPath)
+        .pipe(res);
+    });
+}
 
 ws.installHandlers(server, {prefix: '/ws'});
 
+server.listen(port);
+console.log('Listening on port %s', port);
+
 module.exports = server;
-
-var config = require('../package.json').config;
-
-server.listen(config.port);
-console.log('Listening on port %s', config.port);
