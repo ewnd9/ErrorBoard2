@@ -5,6 +5,7 @@ const favicon = require('serve-favicon');
 const compression = require('compression');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const config = require('./config');
 const publicPath = config.publicPath;
@@ -27,6 +28,7 @@ module.exports = function(dbFile, baseUrl = '', forceSSR = false) {
   app.use(morgan('request: :remote-addr :method :url :status'));
   app.use(favicon(path.join(publicPath, 'favicon.ico')));
   app.use(compression());
+  app.use(cors());
 
   app.get('/reports/:type', require('./routes/route-reports')(db));
   app.post('/api/v1/errors', require('./routes/module-logger')(agent));

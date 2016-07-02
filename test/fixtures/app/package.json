@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "../../../node_modules/.bin/webpack --config webpack.config.js && cd dist && python -m SimpleHTTPServer"
+  }
+}

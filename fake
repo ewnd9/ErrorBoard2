@@ -6,7 +6,7 @@ const reporter = createReporter('test', {
   exit: false,
   unhandledRejections: false,
   windowOnError: false,
-  endpoint: `http://localhost:${process.argv[2]}/api/v1`
+  endpoint: `http://${process.argv[2]}/api/v1`
 });
 
 reporter.report(new Error('fake'));
