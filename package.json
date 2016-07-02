@@ -31,6 +31,7 @@
     "dist",
     "public"
   ],
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
     "compression": "^1.1.0",
