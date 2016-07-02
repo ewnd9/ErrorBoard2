@@ -1,9 +1,10 @@
 const NeDB = require('nedb');
 
-module.exports = function(filename) {
+module.exports = function(filename, inMemoryOnly) {
   const db = new NeDB({
     filename,
-    autoload: true
+    autoload: true,
+    inMemoryOnly
   });
 
   db.ensureIndex({

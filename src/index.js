@@ -13,7 +13,7 @@ const html = fs.readFileSync(htmlPath, 'utf-8');
 const createDb = require('./database');
 const createAgent = require('./node-agent/node-agent');
 
-module.exports = function(dbFile, baseUrl = '') {
+module.exports = function(dbFile, baseUrl = '', forceSSR = false) {
   const app = express();
   const ws = require('./websockets');
 
@@ -29,7 +29,7 @@ module.exports = function(dbFile, baseUrl = '') {
   app.get('/', (req, res) => res.redirect('messages/'));
   app.use('/', express.static(publicPath));
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || forceSSR) {
     const reactRoute = require('./routes/route-index')(html, baseUrl);
 
     app.get('/', reactRoute);
@@ -60,5 +60,5 @@ module.exports = function(dbFile, baseUrl = '') {
     });
   }
 
-  return { app, ws, agent };
+  return { app, db, ws, agent };
 };
