@@ -1,9 +1,9 @@
-var React = require('react');
+const React = require('react');
 
 module.exports = React.createClass({
-    render: function() {
-        return <div className='stack'>
-            { this.props.data }
-        </div>;
-    }
+  render: function() {
+    return <div className='stack'>
+      { this.props.data }
+    </div>;
+  }
 });

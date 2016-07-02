@@ -1,8 +1,7 @@
-var path = require('path');
-var NeDB = require('nedb');
+const NeDB = require('nedb');
 
 module.exports = function(filename) {
-  var db = new NeDB({
+  const db = new NeDB({
     filename,
     autoload: true
   });

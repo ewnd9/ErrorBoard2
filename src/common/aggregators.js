@@ -1,13 +1,13 @@
 module.exports = {
-    metagroup: require('./aggregator-metagroup'),
-    messages: require('./aggregator-messages'),
-    message: require('./aggregator-message'),
-    browsers: require('./aggregator-browsers'),
-    browser: require('./aggregator-browser'),
-    scripts: require('./aggregator-scripts'),
-    script: require('./aggregator-script'),
-    hourly: require('./aggregator-hourly'),
-    pages: require('./aggregator-pages'),
-    page: require('./aggregator-page'),
-    meta: require('./aggregator-meta')
+  metagroup: require('./aggregator-metagroup'),
+  messages: require('./aggregator-messages'),
+  message: require('./aggregator-message'),
+  browsers: require('./aggregator-browsers'),
+  browser: require('./aggregator-browser'),
+  scripts: require('./aggregator-scripts'),
+  script: require('./aggregator-script'),
+  hourly: require('./aggregator-hourly'),
+  pages: require('./aggregator-pages'),
+  page: require('./aggregator-page'),
+  meta: require('./aggregator-meta')
 };

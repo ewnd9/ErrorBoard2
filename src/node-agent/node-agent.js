@@ -1,5 +1,5 @@
-var moment = require('moment');
-var pify = require('pify');
+const moment = require('moment');
+const pify = require('pify');
 
 module.exports = function(db) {
   return new Reporter(db);
@@ -11,30 +11,30 @@ function Reporter(db) {
 }
 
 Reporter.prototype.reportFromRequest = function(err, ua, referer, meta) {
-  var timestamp = Date.now();
-  var date = moment(timestamp).format('DD-MM-YYYY');
+  const timestamp = Date.now();
+  const date = moment(timestamp).format('DD-MM-YYYY');
 
-  var doc = {
-      ua: ua,
-      referer: referer,
-      timestamp: timestamp,
-      date: date,
+  const doc = {
+    ua: ua,
+    referer: referer,
+    timestamp: timestamp,
+    date: date,
 
-      message: err.message,
-      url: err.url,
-      line: err.line,
-      column: err.column,
-      stack: err.stack,
+    message: err.message,
+    url: err.url,
+    line: err.line,
+    column: err.column,
+    stack: err.stack,
 
-      meta: meta
+    meta: meta
   };
 
   return this
-      ._insert(doc)
-      .then(() => doc);
+    ._insert(doc)
+    .then(() => doc);
 };
 
 Reporter.prototype.report = function(err) {
-  var ua = { family: 'backend' };
+  const ua = { family: 'backend' };
   return this.reportFromRequest(err, ua);
 };

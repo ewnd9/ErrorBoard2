@@ -1,39 +1,40 @@
-var express = require('express');
-var useragent = require('useragent');
-var moment = require('moment');
+const express = require('express');
+const useragent = require('useragent');
 
 module.exports = function(agent) {
-  var app = express();
-  var ws = require('./../websockets');
+  const app = express();
+  const ws = require('../websockets');
 
   app.use(function(req, res, next) {
-      var query = req.query;
+    const query = req.query;
 
-      if (!query.message || !query.url) {
-          return res.end(400);
-      }
+    if (!query.message || !query.url) {
+      return res.end(400);
+    }
 
-      var ua = useragent.parse(req.headers['user-agent']).toJSON();
-      var referer = req.headers.referer;
+    const ua = useragent.parse(req.headers['user-agent']).toJSON();
+    const referer = req.headers.referer;
 
-      var meta = query.meta;
+    let meta = query.meta;
 
-      try {
-          meta = JSON.parse(meta);
-      } catch(e) {
-          // Unable to parse JSON metadata, treating it as a string.
-      }
+    try {
+      meta = JSON.parse(meta);
+    } catch (e) {
+      console.log(e);
+    }
 
-      agent
-          .reportFromRequest(err, ua, referer, meta)
-          .then(dock => {
-            try {
-                ws.broadcast(JSON.stringify(doc));
-            } catch(e) {}
+    agent
+      .reportFromRequest(query.stack || query.message, ua, referer, meta)
+      .then(doc => {
+        try {
+          ws.broadcast(JSON.stringify(doc));
+        } catch (e) {
+          console.log(e);
+        }
 
-            res.end();
-          })
-          .catch(err => next(err));
+        res.end();
+      })
+      .catch(err => next(err));
   });
 
   return app;

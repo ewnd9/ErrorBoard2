@@ -1,30 +1,30 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
-var aggregate = require('./aggregate');
-var reduceTimestamps = require('./reduce-timestamps');
-var reduceBrowsers = require('./reduce-browsers');
-var getMessageSignature = require('./message-signature');
-var filterBy = require('./filter-by');
+const aggregate = require('./aggregate');
+const reduceTimestamps = require('./reduce-timestamps');
+const reduceBrowsers = require('./reduce-browsers');
+const getMessageSignature = require('./message-signature');
+const filterBy = require('./filter-by');
 
 module.exports = function(params) {
-    var filterFunction = (params.filterMetaBy ?
-        _.partial(filterBy, params.filterMetaBy) :
-        _.constant(true));
+  const filterFunction = (params.filterMetaBy ?
+    _.partial(filterBy, params.filterMetaBy) :
+    _.constant(true));
 
     return aggregate({
-        groupBy: getMessageSignature,
-        filter: filterFunction,
-        create: function(item) {
-            return {
-                title: item.message,
-                count: 0,
-                browsers: []
-            };
-        },
-        each: function(obj, next) {
-            obj.count += 1;
-            reduceTimestamps(obj, next);
-            reduceBrowsers(obj, next);
-        }
+      groupBy: getMessageSignature,
+      filter: filterFunction,
+      create: function(item) {
+        return {
+          title: item.message,
+          count: 0,
+          browsers: []
+        };
+      },
+      each: function(obj, next) {
+        obj.count += 1;
+        reduceTimestamps(obj, next);
+        reduceBrowsers(obj, next);
+      }
     });
-};
+  };

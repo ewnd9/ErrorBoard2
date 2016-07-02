@@ -1,20 +1,20 @@
-var React = require('react/addons');
-var moment = require('moment');
+const React = require('react/addons');
+const moment = require('moment');
 
-var cx = React.addons.classSet;
+const cx = React.addons.classSet;
 
 module.exports = React.createClass({
-    render: function() {
-        var count = this.props.count;
-        var phrase = (count === 1) ? 'One update' : count + ' updates';
+  render: function() {
+    const count = this.props.count;
+    const phrase = (count === 1) ? 'One update' : `${count} updates`;
 
-        var classes = cx({
-            'counter': true,
-            'counter_hidden': count === 0
-        });
+    const classes = cx({
+      'counter': true,
+      'counter_hidden': count === 0
+    });
 
-        return <div className={ classes } onClick={ this.props.onClick } title='Refresh table'>
-            { phrase } since { moment(this.props.since).format('LT') }
-        </div>;
-    }
+    return <div className={ classes } onClick={ this.props.onClick } title='Refresh table'>
+      { phrase } since { moment(this.props.since).format('LT') }
+    </div>;
+  }
 });

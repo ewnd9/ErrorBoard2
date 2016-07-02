@@ -1,24 +1,24 @@
-var path = require('path');
+const path = require('path');
 
-var express = require('express');
-var favicon = require('serve-favicon');
-var compression = require('compression');
+const express = require('express');
+const favicon = require('serve-favicon');
+const compression = require('compression');
 
-var config = require('./config');
-var publicPath = config.publicPath;
+const config = require('./config');
+const publicPath = config.publicPath;
 
-var fs = require('fs');
-var htmlPath = publicPath + '/index.html';
-var html = fs.readFileSync(htmlPath, 'utf-8');
-var createDb = require('./database');
-var createAgent = require('./node-agent/node-agent');
+const fs = require('fs');
+const htmlPath = `${publicPath}/index.html`;
+const html = fs.readFileSync(htmlPath, 'utf-8');
+const createDb = require('./database');
+const createAgent = require('./node-agent/node-agent');
 
 module.exports = function(dbFile, baseUrl = '') {
-  var app = express();
-  var ws = require('./websockets');
+  const app = express();
+  const ws = require('./websockets');
 
-  var db = createDb(dbFile);
-  var agent = createAgent(db);
+  const db = createDb(dbFile);
+  const agent = createAgent(db);
 
   app.use(favicon(path.join(publicPath, 'favicon.ico')));
   app.use(compression());
@@ -30,34 +30,34 @@ module.exports = function(dbFile, baseUrl = '') {
   app.use('/', express.static(publicPath));
 
   if (process.env.NODE_ENV === 'production') {
-      var reactRoute = require('./routes/route-index')(html, baseUrl);
+    const reactRoute = require('./routes/route-index')(html, baseUrl);
 
-      app.get('/', reactRoute);
-      app.use(compression());
-      app.use(express.static(publicPath));
-      app.get('*', reactRoute);
+    app.get('/', reactRoute);
+    app.use(compression());
+    app.use(express.static(publicPath));
+    app.get('*', reactRoute);
 
-      app.get('/:type/:id?', reactRoute);
+    app.get('/:type/:id?', reactRoute);
   } else {
-      var webpack = require('webpack');
-      var webpackMiddleware = require('webpack-dev-middleware');
-      var webpackHotMiddleware = require('webpack-hot-middleware');
+    const webpack = require('webpack');
+    const webpackMiddleware = require('webpack-dev-middleware');
+    const webpackHotMiddleware = require('webpack-hot-middleware');
 
-      var wconfig = require('../webpack.config.dev');
-      var compiler = webpack(wconfig);
-      var middleware = webpackMiddleware(compiler, {
-        ...wconfig.devServer,
-        contentBase: __dirname
-      });
+    const wconfig = require('../webpack.config.dev');
+    const compiler = webpack(wconfig);
+    const middleware = webpackMiddleware(compiler, {
+      ...wconfig.devServer,
+      contentBase: __dirname
+    });
 
-      app.use(middleware);
-      app.use(webpackHotMiddleware(compiler));
+    app.use(middleware);
+    app.use(webpackHotMiddleware(compiler));
 
-      app.get('*', function response(req, res) {
-        middleware.fileSystem
-          .createReadStream(htmlPath)
-          .pipe(res);
-      });
+    app.get('*', function response(req, res) {
+      middleware.fileSystem
+        .createReadStream(htmlPath)
+        .pipe(res);
+    });
   }
 
   return { app, ws, agent };
