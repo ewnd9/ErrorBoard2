@@ -16,8 +16,11 @@ config.node = {
   __filename: false,
   __dirname: false
 };
+
 config.output.path = __dirname + '/dist';
 config.output.filename = 'backend.js';
+config.output.libraryTarget = 'commonjs2';
+
 config.externals = [nodeExternals()];
 
 config.plugins = config.plugins.reduce(function(total, curr) {
