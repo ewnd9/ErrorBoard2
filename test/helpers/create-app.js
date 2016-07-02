@@ -2,6 +2,7 @@ import http from 'http';
 import proxyquire from 'proxyquire';
 
 import createDb from '../../src/database';
+import createRepoter from './create-reporter';
 
 export default () => {
   const createApp = proxyquire('../../src/index', {
@@ -13,7 +14,6 @@ export default () => {
   const server = http.createServer(app);
   server.listen();
 
-  return agent
-    .report(new Error('error'))
-    .then(() => ({ app, server, db }));
+  const reporter = createRepoter(`http://localhost:${server.address().port}/api/v1`);
+  return { app, server, db, reporter };
 };

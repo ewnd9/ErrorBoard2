@@ -6,25 +6,19 @@ module.exports = function(agent) {
   const ws = require('../websockets');
 
   app.use(function(req, res, next) {
-    const query = req.query;
+    const { body } = req;
 
-    if (!query.message || !query.url) {
-      return res.end(400);
+    if (!body.message) {
+      return res.status(400).end();
     }
 
     const ua = useragent.parse(req.headers['user-agent']).toJSON();
     const referer = req.headers.referer;
 
-    let meta = query.meta;
-
-    try {
-      meta = JSON.parse(meta);
-    } catch (e) {
-      console.log(e);
-    }
+    let meta = body.metaData;
 
     agent
-      .reportFromRequest(query.stack || query.message, ua, referer, meta)
+      .reportFromRequest({ message: body.message, stack: body.stack }, ua, referer, meta)
       .then(doc => {
         try {
           ws.broadcast(JSON.stringify(doc));
@@ -32,7 +26,7 @@ module.exports = function(agent) {
           console.log(e);
         }
 
-        res.end();
+        res.send({ status: 'ok' });
       })
       .catch(err => next(err));
   });

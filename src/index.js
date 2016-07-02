@@ -3,6 +3,8 @@ const path = require('path');
 const express = require('express');
 const favicon = require('serve-favicon');
 const compression = require('compression');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const config = require('./config');
 const publicPath = config.publicPath;
@@ -20,11 +22,14 @@ module.exports = function(dbFile, baseUrl = '', forceSSR = false) {
   const db = createDb(dbFile);
   const agent = createAgent(db);
 
+  app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(morgan('request: :remote-addr :method :url :status'));
   app.use(favicon(path.join(publicPath, 'favicon.ico')));
   app.use(compression());
 
   app.get('/reports/:type', require('./routes/route-reports')(db));
-  app.get('/error', require('./routes/module-logger')(agent));
+  app.post('/api/v1/errors', require('./routes/module-logger')(agent));
 
   app.get('/', (req, res) => res.redirect('messages/'));
   app.use('/', express.static(publicPath));
